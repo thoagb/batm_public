@@ -72,6 +72,7 @@ import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.coinbase.v2.ICoinbaseV2API;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWallet;
 import com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryptx.v2.CryptXWithUniqueAddresses;
+import com.generalbytes.batm.server.extensions.util.DummyWalletAndExchangeAndSourceFactory;
 import com.generalbytes.batm.server.extensions.watchlist.IWatchList;
 
 import java.math.BigDecimal;
@@ -90,6 +91,8 @@ import static com.generalbytes.batm.server.extensions.extra.bitcoin.wallets.cryp
 
 public class BitcoinExtension extends AbstractExtension {
     private IExtensionContext ctx;
+    private static final DummyWalletAndExchangeAndSourceFactory dummyFactory = new DummyWalletAndExchangeAndSourceFactory();
+
 
     @Override
     public void init(IExtensionContext ctx) {
@@ -232,6 +235,8 @@ public class BitcoinExtension extends AbstractExtension {
                     preferredFiatCurrency = paramTokenizer.nextToken().toUpperCase();
                 }
                 return new OkxExchange(preferredFiatCurrency, apiKey, secretKey, passphrase);
+            } else if ("bnbdemo".equalsIgnoreCase(prefix)) {
+                return dummyFactory.createDummyWithFiatCurrencyAndAddress(paramTokenizer, CryptoCurrency.BNB);
             }
         }
         } catch (Exception e) {
@@ -477,6 +482,8 @@ public class BitcoinExtension extends AbstractExtension {
                     return new CryptXWithUniqueAddresses(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, password);
                 }
                 return new CryptXWallet(scheme, host, port, token, walletId, priority, customFeePrice, customGasLimit, password);
+            } else if ("bnbdemo".equalsIgnoreCase(walletType)) {
+                return dummyFactory.createDummyWithFiatCurrencyAndAddress(st, CryptoCurrency.BNB);
             }
         }
         } catch (Exception e) {

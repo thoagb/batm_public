@@ -64,4 +64,13 @@ public interface IDepositRequest {
      */
     String getErrorMessage();
 
+    /**
+     * Text to be rendered into a QR code and displayed alongside the error message.
+     *
+     * @return QR code text, or null if no QR code should be displayed
+     */
+    default String getErrorQrCodeText() {
+        return null;
+    }
+
 }
